@@ -20,8 +20,10 @@ void Qiime2VizPlugin::run() {
 
 void Qiime2VizPlugin::output(std::string file) {  
    std::string myPrefix = std::string(PluginManager::prefix());
-   std::string command = "eval \"$(conda shell.bash hook)\"; ";
-   command += "conda activate qiime2-2020.11; ";
+      std::string command = "export OLDPATH=${PATH}; ";
+   command += "export PATH=${CONDA_HOME}/bin/:${PATH}; ";
+   command += "eval \"$(conda shell.bash hook)\"; ";
+   command += "conda activate qiime2-2021.4; ";
    command += "qiime ";
    std::string op1, op2;
    op1 = parameters["op1"];
@@ -42,7 +44,7 @@ void Qiime2VizPlugin::output(std::string file) {
          command += "--i-data "+myPrefix+"/"+parameters["data"]+" ";
       else { // summarize
 	 command += "--i-table "+myPrefix+"/"+parameters["table"]+" ";
-	 command += "--m-sample-metadata-file "+myPrefix+"/"+parameters["metadata"]+" ";
+	// command += "--m-sample-metadata-file "+myPrefix+"/"+parameters["metadata"]+" ";
       }
    }
    else if (op1 == "taxa") {
@@ -50,8 +52,13 @@ void Qiime2VizPlugin::output(std::string file) {
 	 command += "--i-taxonomy "+myPrefix+"/"+parameters["taxonomy"]+" ";
 	 command += "--m-metadata-file "+myPrefix+"/"+parameters["metadata"]+" ";
    }
-   command += " --o-visualization "+file+"; conda deactivate";
+   command += " --o-visualization "+file+"; ";
  //std::cout << command << std::endl;
+   command += "conda deactivate; ";
+   command += "conda deactivate; ";
+   command += "export PATH=${OLDPATH}";
+ std::cout << command << std::endl;
+
 
  system(command.c_str());
 }
