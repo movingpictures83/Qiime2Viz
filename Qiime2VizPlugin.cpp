@@ -39,6 +39,11 @@ void Qiime2VizPlugin::output(std::string file) {
    else if (op1 == "deblur") {
       command += "--i-deblur-stats "+myPrefix+"/"+parameters["deblurstats"]+" ";
    }
+   else if (op1 == "barplot") {
+      command += "--i-table "+myPrefix+"/"+parameters["table"]+" ";
+      command += "--i-taxonomy "+myPrefix+"/"+parameters["taxonomy"]+" ";
+      command += "--m-metadata-file "+myPrefix+"/"+parameters["metadata"]+" ";
+   }
    else if (op1 == "feature-table") {
       if (op2 == "tabulate-seqs")
          command += "--i-data "+myPrefix+"/"+parameters["data"]+" ";
